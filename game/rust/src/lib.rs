@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-mod player;
+mod rhythm;
 
 struct MyExtension;
 

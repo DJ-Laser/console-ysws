@@ -1,0 +1,5 @@
+[gd_resource type="Beatmap" format=3 uid="uid://bj0kj8eeuh2kn"]
+
+[resource]
+name = "Demo Beatmap"
+difficulty_rating = 20

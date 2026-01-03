@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqow47bch5ocs"]
+
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://byajodkdelrok" path="res://gameplay/Conductor.tscn" id="2_0wfyh"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(571, 337)
+texture = ExtResource("1_ig7tw")
+
+[node name="Conductor" parent="." instance=ExtResource("2_0wfyh")]
