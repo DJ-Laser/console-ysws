@@ -21,6 +21,8 @@ pub struct Song {
   #[export]
   bpm: u32,
   #[export]
+  first_beat_offset_ms: u32,
+  #[export]
   //beatmaps: Array<Gd<Beatmap>>,
   beatmap: OnEditor<Gd<Beatmap>>,
 
@@ -38,6 +40,14 @@ impl Song {
 
   pub fn bpm(&self) -> u32 {
     self.bpm
+  }
+
+  pub fn first_beat_offset_ms(&self) -> u32 {
+    self.first_beat_offset_ms
+  }
+
+  pub fn first_beat_offset_secs(&self) -> f64 {
+    (self.first_beat_offset_ms as f64) / 1000.0
   }
 
   pub fn beatmap(&self) -> Gd<Beatmap> {
