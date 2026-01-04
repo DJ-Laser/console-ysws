@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="512"
+   height="512"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="reticle.svg"
+   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   inkscape:export-batch-path="/home/dj_laser/Documents/console-ysws/game/godot"
+   inkscape:export-batch-name=""
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     showgrid="false"
+     inkscape:zoom="0.83289625"
+     inkscape:cx="225.11807"
+     inkscape:cy="276.14484"
+     inkscape:window-width="1464"
+     inkscape:window-height="963"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer2"
+     inkscape:export-bgcolor="#00000000" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Ring">
+    <circle
+       style="display:none;fill:#ff3333;fill-opacity:1;stroke:none;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       id="path45"
+       cx="64"
+       cy="64"
+       r="60" />
+    <path
+       id="path41"
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 404.34652,154.02288 c -29.9487,-43.48344 -78.52128,-73.14714 -134.202,-77.4753" />
+    <path
+       id="path39"
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 418.50997,333.49563 C 429.72238,310.02525 436,283.74573 436,255.99999 c 0,-27.74571 -6.27762,-54.02523 -17.49003,-77.49564" />
+    <path
+       id="path37"
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 270.14452,435.45243 c 55.68072,-4.32816 104.2533,-33.99186 134.202,-77.47533" />
+    <path
+       id="path35"
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 107.65348,357.9771 c 29.9487,43.48347 78.52128,73.14717 134.202,77.47533" />
+    <path
+       id="path33"
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 93.49003,178.50432 C 82.27762,201.97476 76,228.25428 76,255.99999 c 0,27.74574 6.27762,54.02526 17.49,77.49564" />
+    <path
+       id="path31"
+       style="display:inline;fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 241.85548,76.54758 c -55.68072,4.32816 -104.2533,33.99183 -134.202,77.4753" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Crosshair">
+    <path
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:12;stroke-dasharray:none;stroke-opacity:1"
+       d="m 256,38.00409 v 75.99183"
+       id="path42" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:12;stroke-dasharray:none;stroke-opacity:1"
+       d="m 256,398.00406 v 75.99186"
+       id="path42-5" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:12;stroke-dasharray:none;stroke-opacity:1"
+       d="M 473.99593,255.99999 H 398.00407"
+       id="path42-56" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:12;stroke-dasharray:none;stroke-opacity:1"
+       d="M 113.99593,255.99999 H 38.00407"
+       id="path42-9" />
+  </g>
+</svg>

@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://byajodkdelrok"]
-
-[ext_resource type="Song" uid="uid://c5yki5sfop3qm" path="res://audio/songs/demo_song.tres" id="1_6f3l8"]
-
-[node name="Conductor" type="Conductor"]
-song = ExtResource("1_6f3l8")
-
-[node name="MainSongPlayer" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true

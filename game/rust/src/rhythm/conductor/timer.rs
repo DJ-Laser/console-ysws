@@ -23,10 +23,10 @@ pub struct SongTimer {
 }
 
 impl SongTimer {
-  pub fn new(song: &Song, filter: OneEuroFilter) -> Self {
+  pub fn new(filter: OneEuroFilter) -> Self {
     Self {
-      bpm: song.bpm() as f64,
-      time_to_first_beat: song.first_beat_offset_secs(),
+      bpm: 0.0,
+      time_to_first_beat: 0.0,
 
       system_clock_start_time: 0.0,
       system_clock_position: 0.0,
@@ -37,6 +37,11 @@ impl SongTimer {
       filter,
       filtered_position_discrepancy: 0.0,
     }
+  }
+
+  pub fn set_song(&mut self, song: &Song) {
+    self.bpm = song.bpm() as f64;
+    self.time_to_first_beat = song.first_beat_offset_secs();
   }
 
   /// Update the system and audio server positions
@@ -61,7 +66,7 @@ impl SongTimer {
   }
 
   /// Update the filtered position
-  /// Call in a fixed loop such as `physics_process` for teh best consistency
+  /// Call in a fixed loop such as `physics_process` for the best consistency
   pub fn fixed_update(&mut self, delta: f64) {
     let position_discrepancy = self.audio_server_position - self.system_clock_position;
     self.filtered_position_discrepancy = self.filter.filter(position_discrepancy, delta);
@@ -83,11 +88,19 @@ impl SongTimer {
   }
 
   pub fn get_beat_duration(&self) -> f64 {
+    if self.bpm == 0.0 {
+      return 0.0;
+    }
+
     60.0 / self.bpm
   }
 
   /// Get the song position in baets
   pub fn get_current_beat(&self) -> f64 {
+    if self.get_beat_duration() == 0.0 {
+      return 0.0;
+    }
+
     self.get_current_position() / self.get_beat_duration()
   }
 }

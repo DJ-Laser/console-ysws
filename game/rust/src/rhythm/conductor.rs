@@ -13,17 +13,16 @@ mod timer;
 
 /// Handles Playing the song audio and synchronizing game events to the music
 #[derive(GodotClass)]
-#[class(init, base=Node)]
-struct Conductor {
+#[class(init, base = Node)]
+pub struct Conductor {
   #[export]
   song: OnEditor<Gd<Song>>,
 
-  /// If `true`, the song is paused.
-  /// Setting this property will pause/unpause the song
-  #[export]
-  #[var(get = is_paused, set = set_paused)]
-  is_paused: PhantomVar<bool>,
-
+  // /// If `true`, the song is paused.
+  // /// Setting this property will pause/unpause the song
+  // #[var(get = is_paused, set = set_paused)]
+  // #[export]
+  // is_paused: PhantomVar<bool>,
   #[export_group(name = "Nodes")]
   /// AudioStreamPlayer for the main song audio
   #[export]
@@ -39,7 +38,8 @@ struct Conductor {
   #[init(val = 5.0)]
   lag_reduction: f64,
 
-  song_timer: Option<SongTimer>,
+  #[init(val = OnReady::manual())]
+  song_timer: OnReady<SongTimer>,
 
   base: Base<Node>,
 }
@@ -48,6 +48,11 @@ struct Conductor {
 impl INode for Conductor {
   fn ready(&mut self) {
     self.base_mut().set_process_mode(ProcessMode::ALWAYS);
+    self.song_timer.init(SongTimer::new(OneEuroFilter::new(
+      self.allowed_jitter,
+      self.lag_reduction,
+      self.allowed_jitter,
+    )));
 
     self.play();
   }
@@ -57,9 +62,9 @@ impl INode for Conductor {
       return;
     }
 
-    if let Some(song_timer) = &mut self.song_timer {
-      song_timer.update(self.song_player.get_playback_position() as f64);
-    }
+    self
+      .song_timer
+      .update(self.song_player.get_playback_position() as f64);
   }
 
   fn physics_process(&mut self, delta: f64) {
@@ -67,49 +72,38 @@ impl INode for Conductor {
       return;
     }
 
-    if let Some(song_timer) = &mut self.song_timer {
-      song_timer.fixed_update(delta);
-    }
+    self.song_timer.fixed_update(delta);
   }
 }
 
 #[godot_api]
 impl Conductor {
   #[func]
-  fn is_paused(&self) -> bool {
+  pub fn is_paused(&self) -> bool {
     self.song_player.get_stream_paused()
   }
 
   #[func]
-  fn set_paused(&mut self, paused: bool) {
+  pub fn set_paused(&mut self, paused: bool) {
     self.song_player.set_stream_paused(paused)
   }
 
   #[func]
-  fn play(&mut self) {
+  pub fn play(&mut self) {
     let song = self.song.bind();
     self.song_player.set_stream(&song.audio());
 
-    let mut song_timer = SongTimer::new(
-      &song,
-      OneEuroFilter::new(self.allowed_jitter, self.lag_reduction, self.allowed_jitter),
-    );
-
     self.song_player.play();
-    song_timer.reset_song_start_time();
-    self.song_timer = Some(song_timer)
+    self.song_timer.reset_song_start_time();
   }
 
   #[func]
-  fn stop(&mut self) {
+  pub fn stop(&mut self) {
     self.song_player.stop();
-    self.song_timer = None;
   }
 
-  fn get_current_beat(&self) -> Option<f64> {
-    self
-      .song_timer
-      .as_ref()
-      .map(|song_timer| song_timer.get_current_beat())
+  #[func]
+  pub fn get_current_beat(&self) -> f64 {
+    self.song_timer.get_current_beat()
   }
 }

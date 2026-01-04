@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3c4v3nt0j1ym"]
+
+[ext_resource type="Texture2D" uid="uid://dkr1d08e0pgu6" path="res://objects/reticle/ring.svg" id="1_01o6s"]
+[ext_resource type="Texture2D" uid="uid://d0ffimlx0i5ju" path="res://objects/reticle/crosshair.svg" id="2_0qs1e"]
+
+[node name="Reticle" type="Reticle"]
+
+[node name="Ring" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_01o6s")
+
+[node name="Crosshair" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("2_0qs1e")

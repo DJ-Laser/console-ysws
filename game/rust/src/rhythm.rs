@@ -1,2 +1,2 @@
-mod conductor;
-mod song;
+pub mod conductor;
+pub mod song;
