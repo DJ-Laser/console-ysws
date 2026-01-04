@@ -92,6 +92,7 @@ impl Conductor {
   pub fn play(&mut self) {
     let song = self.song.bind();
     self.song_player.set_stream(&song.audio());
+    self.song_timer.set_song(&song);
 
     self.song_player.play();
     self.song_timer.reset_song_start_time();

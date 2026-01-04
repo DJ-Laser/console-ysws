@@ -20,8 +20,10 @@ pub struct Reticle {
 impl INode2D for Reticle {
   fn process(&mut self, _delta: f64) {
     let current_beat = self.conductor.bind().get_current_beat();
-    // NOT WORKING???
-    //self.crosshair_sprite.get_position()
-    //self.ring_sprite.set_rotation(-current_beat as f32 / 10.0);
+
+    self
+      .crosshair_sprite
+      .set_rotation((current_beat / 2.0) as f32);
+    self.ring_sprite.set_rotation((-current_beat / 2.0) as f32);
   }
 }

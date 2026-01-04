@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkr1d08e0pgu6"
-path="res://.godot/imported/ring.svg-f22c3aaab1961f36fd466d89a6ff478e.ctex"
+uid="uid://b53gccnq1y1fp"
+path="res://.godot/imported/held_note.svg-0dfcee08cd15421f547f670850802d8f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://objects/reticle/ring.svg"
-dest_files=["res://.godot/imported/ring.svg-f22c3aaab1961f36fd466d89a6ff478e.ctex"]
+source_file="res://objects/held_note/held_note.svg"
+dest_files=["res://.godot/imported/held_note.svg-0dfcee08cd15421f547f670850802d8f.ctex"]
 
 [params]
 

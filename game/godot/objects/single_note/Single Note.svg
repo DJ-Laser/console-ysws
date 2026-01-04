@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="338"
+   height="338"
+   version="1.1"
+   id="svg6"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <g
+     id="layer1"
+     style="display:inline"
+     transform="translate(-87,-87)">
+    <circle
+       style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:8;stroke-linecap:butt;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path1"
+       cx="256"
+       cy="256"
+       r="165" />
+    <circle
+       style="fill:#df6a6a;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       id="circle1"
+       cx="256"
+       cy="256"
+       r="132" />
+    <circle
+       style="fill:#e0d36b;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       id="circle2"
+       cx="256"
+       cy="256"
+       r="99" />
+    <circle
+       style="fill:#93e06b;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       id="circle3"
+       cx="256"
+       cy="256"
+       r="66" />
+    <circle
+       style="fill:#6be0d1;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none;stroke-opacity:1"
+       id="circle4"
+       cx="256"
+       cy="256"
+       r="33" />
+  </g>
+</svg>

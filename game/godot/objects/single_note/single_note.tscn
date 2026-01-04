@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvo5m5ncw2a0g"]
+
+[ext_resource type="Texture2D" uid="uid://byeux4idmgeet" path="res://objects/single_note/Single Note.svg" id="1_r3ij8"]
+[ext_resource type="Texture2D" uid="uid://dacmpbn41mp8r" path="res://objects/single_note/Single Note (Broken A).svg" id="2_px5mj"]
+[ext_resource type="Texture2D" uid="uid://bexdjmklem7dd" path="res://objects/single_note/Single Note (Broken B).svg" id="3_ngjbn"]
+
+[node name="SingleNote" type="Sprite2D"]
+texture = ExtResource("1_r3ij8")
+
+[node name="Broken A" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(30, 52)
+texture = ExtResource("2_px5mj")
+
+[node name="Broken B" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-6, -20)
+texture = ExtResource("3_ngjbn")
