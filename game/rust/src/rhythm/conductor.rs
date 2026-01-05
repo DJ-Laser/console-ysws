@@ -18,10 +18,6 @@ pub struct Conductor {
   #[export]
   song: OnEditor<Gd<Song>>,
 
-  #[export]
-  #[init(val = 1.0)]
-  scroll_speed: f64,
-
   // /// If `true`, the song is paused.
   // /// Setting this property will pause/unpause the song
   // #[var(get = is_paused, set = set_paused)]
@@ -115,16 +111,5 @@ impl Conductor {
   #[func]
   pub fn get_beat_duration(&self) -> f64 {
     self.song_timer.get_beat_duration()
-  }
-
-  pub fn scroll_speed(&self) -> f64 {
-    self.scroll_speed
-  }
-
-  /// Get the position in px for note's beat poition
-  #[func]
-  pub fn get_note_position(&self, position_beats: f64) -> f64 {
-    let time_offset = (self.get_current_beat() - position_beats) * self.get_beat_duration();
-    time_offset * self.scroll_speed
   }
 }

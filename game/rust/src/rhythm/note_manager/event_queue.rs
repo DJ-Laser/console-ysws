@@ -9,7 +9,8 @@ struct OrderedNoteEvent(AssociatedNoteEvent);
 impl Eq for OrderedNoteEvent {}
 impl Ord for OrderedNoteEvent {
   fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-    self.0.event.at().total_cmp(&other.0.event.at())
+    // We want the soonest events first
+    self.0.event.at().total_cmp(&other.0.event.at()).reverse()
   }
 }
 impl PartialEq for OrderedNoteEvent {

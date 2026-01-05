@@ -20,10 +20,18 @@ impl NoteTimingWindow {
     self.hit_window_ms() / 1000.0
   }
 
+  pub fn is_too_early(delta: f64) -> bool {
+    delta < -Self::Miss.hit_window_secs()
+  }
+
+  pub fn is_too_late(delta: f64) -> bool {
+    delta > Self::Miss.hit_window_secs()
+  }
+
   /// Evaluate the hit delta (secs) return a rating
   /// If `None` is returned, the note was too early to hit
   pub fn from_delta(delta: f64) -> Option<Self> {
-    if delta > Self::Miss.hit_window_secs() {
+    if Self::is_too_early(delta) {
       return None;
     }
 
@@ -54,6 +62,10 @@ pub struct NoteEvent {
 }
 
 impl NoteEvent {
+  pub fn new(event_type: NoteEventType, at: f64) -> Self {
+    Self { event_type, at }
+  }
+
   pub fn event_type(&self) -> NoteEventType {
     self.event_type
   }

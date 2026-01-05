@@ -1,8 +1,8 @@
 use godot::{classes::Sprite2D, prelude::*};
 
 use crate::rhythm::{
-  conductor::Conductor,
-  notes::{Note, NoteTimingWindow},
+  note_manager::NoteManager,
+  notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
 };
 
 #[derive(Debug)]
@@ -16,10 +16,11 @@ enum NoteState {
 #[class(init, base = Node2D)]
 pub struct HeldNote {
   #[export]
-  conductor: OnEditor<Gd<Conductor>>,
+  note_manager: OnEditor<Gd<NoteManager>>,
 
   #[export]
   start_beat: f64,
+  #[export]
   release_beat: f64,
 
   #[init(val = NoteState::PreHit)]
@@ -43,16 +44,21 @@ impl INode2D for HeldNote {
       return;
     }
 
-    let conductor = self.conductor.bind();
+    let note_manager = self.note_manager.bind();
 
-    let end_position = conductor.get_note_position(self.release_beat).max(0.0);
     let start_position = if matches!(self.note_state, NoteState::PreHit) {
-      conductor.get_note_position(self.start_beat)
+      note_manager.get_note_position(self.start_beat)
     } else {
       0.0
     };
 
-    drop(conductor);
+    let end_position = if note_manager.get_current_beat() <= self.release_beat {
+      note_manager.get_note_position(self.release_beat)
+    } else {
+      0.0
+    };
+
+    drop(note_manager);
 
     self.position_track(start_position, end_position);
   }
@@ -65,14 +71,14 @@ impl HeldNote {
       .start_sprite
       .set_position(Vector2::new(start_position as f32, 0.0));
 
-    let track_width = (end_position - start_position) as f32;
+    let track_width = (start_position - end_position).abs() as f32;
     let mut track_region = self.track_sprite.get_region_rect();
     track_region.size.x = track_width;
     self.track_sprite.set_region_rect(track_region);
 
     self
       .track_sprite
-      .set_position(Vector2::new(track_width / 2.0, 0.0));
+      .set_position(Vector2::new(start_position as f32 + track_width / 2.0, 0.0));
 
     self
       .end_sprite
@@ -80,9 +86,14 @@ impl HeldNote {
   }
 }
 
+#[godot_dyn]
 impl Note for HeldNote {
-  fn get_next_event(&self) -> Option<crate::rhythm::notes::NoteEvent> {
-    todo!()
+  fn get_next_event(&self) -> Option<NoteEvent> {
+    match self.note_state {
+      NoteState::PreHit => Some(NoteEvent::new(NoteEventType::Hold, self.start_beat)),
+      NoteState::Holding => Some(NoteEvent::new(NoteEventType::Release, self.release_beat)),
+      NoteState::Free => None,
+    }
   }
 
   fn hit(&mut self, rating: NoteTimingWindow) {
@@ -94,7 +105,7 @@ impl Note for HeldNote {
     match self.note_state {
       NoteState::PreHit => self.note_state = NoteState::Holding,
       NoteState::Holding => self.note_state = NoteState::Free,
-      NoteState::Free => {}
+      NoteState::Free => (),
     }
   }
 }
