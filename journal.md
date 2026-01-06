@@ -8,7 +8,7 @@ Tutorials I used: https://www.youtube.com/watch?v=JPBmrUsSeok, https://www.youtu
 
 I later found the rhythm game demo project which after fixing the formatting so it would run provided a great foundation for translating the code into rust.
 
-Jan 5
+### Jan 4
 
 I did art for the notes (basic shapes in svgs was the best i could do lol) and programmed their functionality in Rust.
 
@@ -17,3 +17,7 @@ They move along the track now, and you can hit them, which will print out your t
 The system if modular and extendable to new note types, but that also means it's a bit harder to create the specific functionality of each note, I think it's worth the complexity though.
 
 This took a long time and im tired now :/
+
+### Jan 5
+
+I tweaked the scrolling behavior and made hold notes propperly miss on an early release.
