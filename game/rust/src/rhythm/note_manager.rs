@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use godot::{classes::Input, prelude::*};
 
 use crate::{
-  gameplay::{held_note::HeldNote, reticle::Reticle, single_note::SingleNote},
+  gameplay::beatmap_loader::BeatmapLoader,
   rhythm::{
     conductor::Conductor,
     note_manager::event_queue::NoteEventQueue,
@@ -13,7 +13,7 @@ use crate::{
 
 mod event_queue;
 
-type DynNote = DynGd<Node, dyn Note>;
+pub type DynNote = DynGd<Node, dyn Note>;
 
 #[derive(Debug)]
 pub struct AssociatedNoteEvent {
@@ -42,10 +42,13 @@ impl AssociatedNoteEvent {
 }
 
 #[derive(Debug, GodotClass)]
-#[class(init, base = Node2D)]
+#[class(init, base = Node)]
 pub struct NoteManager {
   #[export]
   conductor: OnEditor<Gd<Conductor>>,
+
+  #[export]
+  beatmap_loader: OnEditor<Gd<BeatmapLoader>>,
 
   /// How many pixels represent one beat
   /// Beat 1 will start x * 1 pixels away
@@ -60,59 +63,20 @@ pub struct NoteManager {
   #[init(val = 25.0)]
   input_latency_ms: f64,
 
-  #[export]
-  high_hit_location: OnEditor<Gd<Reticle>>,
-  #[export]
-  low_hit_location: OnEditor<Gd<Reticle>>,
-
   events: HashMap<RhythmInput, NoteEventQueue>,
   held_events: Vec<AssociatedNoteEvent>,
 
-  #[init(load = "res://objects/single_note/single_note.tscn")]
-  single_note_scene: OnReady<Gd<PackedScene>>,
-
-  #[init(load = "res://objects/held_note/held_note.tscn")]
-  held_note_scene: OnReady<Gd<PackedScene>>,
-
-  base: Base<Node2D>,
+  base: Base<Node>,
 }
 
 #[godot_api]
-impl INode2D for NoteManager {
+impl INode for NoteManager {
   fn ready(&mut self) {
-    let mut input = RhythmInput::High;
-    for i in 1..=20 {
-      let note = self
-        .single_note_scene
-        .instantiate()
-        .expect("Scene should be valid");
-      let mut note: Gd<SingleNote> = note.cast();
-
-      note.bind_mut().set_hit_beat(i as f64 * 1.0);
-      note.bind_mut().set_note_manager(Some(self.to_gd()));
-      note.bind_mut().set_rhythm_input(input.to_godot());
-
-      input = match input {
-        RhythmInput::High => RhythmInput::Low,
-        RhythmInput::Low => RhythmInput::High,
-      };
-
-      self.base_mut().add_child(&note);
-      self.add_note(note.into_dyn().upcast());
-    }
-
-    let note = self
-      .held_note_scene
-      .instantiate()
-      .expect("Scene should be valid");
-    let mut note: Gd<HeldNote> = note.cast();
-
-    note.bind_mut().set_start_beat(24.0);
-    note.bind_mut().set_release_beat(30.0);
-    note.bind_mut().set_note_manager(Some(self.to_gd()));
-
-    self.base_mut().add_child(&note);
-    self.add_note(note.into_dyn().upcast());
+    self
+      .beatmap_loader
+      .signals()
+      .ready()
+      .connect_other(self, Self::load_beatmap);
   }
 
   fn process(&mut self, _delta: f64) {
@@ -136,6 +100,20 @@ impl INode2D for NoteManager {
 
 #[godot_api]
 impl NoteManager {
+  fn load_beatmap(&mut self) {
+    let self_gd = self.to_gd();
+    let mut notes = Vec::new();
+
+    self
+      .beatmap_loader
+      .bind_mut()
+      .load_beatmap_sprites(self_gd, |note| notes.push(note));
+
+    for note in notes {
+      self.add_note(note);
+    }
+  }
+
   fn process_event_queue(&mut self, input: RhythmInput) {
     let Some(mut queue) = self.events.remove(&input) else {
       return;
@@ -240,19 +218,13 @@ impl NoteManager {
   pub fn get_note_position(&self, position_beats: f64) -> f32 {
     let beat_offset = self.get_current_beat() - position_beats;
     // Scaling changes the relative speed of the notes, so divide to keep the scroll speed relative to global units
-    let scroll_speed = self.scroll_speed / (self.base().get_scale().x as f64);
+    let scroll_speed = self.scroll_speed / (self.beatmap_loader.get_scale().x as f64);
     (-beat_offset * scroll_speed) as f32
   }
 
   /// Get the verical position in px for note's track
   #[func]
   pub fn get_note_track(&self, input_track: RhythmInput) -> f32 {
-    let global_pos = match input_track {
-      RhythmInput::High => self.high_hit_location.get_global_position(),
-      RhythmInput::Low => self.low_hit_location.get_global_position(),
-    };
-
-    let local_pos = self.base().to_local(global_pos);
-    local_pos.y
+    self.beatmap_loader.bind().get_hit_location(input_track).y
   }
 }

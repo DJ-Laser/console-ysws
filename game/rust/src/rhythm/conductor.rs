@@ -23,7 +23,6 @@ pub struct Conductor {
   // #[var(get = is_paused, set = set_paused)]
   // #[export]
   // is_paused: PhantomVar<bool>,
-  #[export_group(name = "Nodes")]
   /// AudioStreamPlayer for the main song audio
   #[export]
   song_player: OnEditor<Gd<AudioStreamPlayer>>,

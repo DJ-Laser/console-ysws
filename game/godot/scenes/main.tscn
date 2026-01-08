@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=10 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="1_ig7tw"]
 [ext_resource type="Song" uid="uid://dww016k0co24y" path="res://audio/songs/the_comeback/the_comeback.tres" id="1_sugp2"]
+[ext_resource type="Beatmap" uid="uid://b4ofews21usx1" path="res://audio/songs/the_comeback/the_comeback_beatmap.tres" id="1_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c3c4v3nt0j1ym" path="res://objects/reticle/reticle.tscn" id="3_sugp2"]
 [ext_resource type="Shader" uid="uid://bo8m6lmwuvomd" path="res://shaders/pixelate/pixelate.gdshader" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://dyql3bhuynagn" path="res://shaders/background.gdshader" id="5_tbgi4"]
@@ -22,14 +23,9 @@ shader = ExtResource("5_tbgi4")
 song = ExtResource("1_sugp2")
 song_player = NodePath("../AudioStreamPlayer")
 
-[node name="NoteManager" type="NoteManager" parent="Rhythm Logic" node_paths=PackedStringArray("conductor", "high_hit_location", "low_hit_location")]
+[node name="NoteManager" type="NoteManager" parent="Rhythm Logic" node_paths=PackedStringArray("conductor", "beatmap_loader")]
 conductor = NodePath("../Conductor")
-scroll_speed = 200.0
-input_latency_ms = 28.0
-high_hit_location = NodePath("../../Node2D/High Reticle")
-low_hit_location = NodePath("../../Node2D/Low Reticle")
-position = Vector2(278.903, 0)
-scale = Vector2(0.3, 0.3)
+beatmap_loader = NodePath("../../Rhythm Gameplay Elements/BeatmapLoader")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Rhythm Logic"]
 
@@ -37,15 +33,21 @@ scale = Vector2(0.3, 0.3)
 position = Vector2(122, 324)
 texture = ExtResource("1_ig7tw")
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Rhythm Gameplay Elements" type="Node2D" parent="."]
 position = Vector2(278.903, 324)
 
-[node name="High Reticle" parent="Node2D" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
+[node name="BeatmapLoader" type="BeatmapLoader" parent="Rhythm Gameplay Elements" node_paths=PackedStringArray("high_hit_location", "low_hit_location")]
+beatmap = ExtResource("1_tefeu")
+high_hit_location = NodePath("../High Reticle")
+low_hit_location = NodePath("../Low Reticle")
+scale = Vector2(0.3, 0.3)
+
+[node name="High Reticle" parent="Rhythm Gameplay Elements" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
 conductor = NodePath("../../Rhythm Logic/Conductor")
 position = Vector2(0, -150)
 scale = Vector2(0.25, 0.25)
 
-[node name="Low Reticle" parent="Node2D" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
+[node name="Low Reticle" parent="Rhythm Gameplay Elements" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
 conductor = NodePath("../../Rhythm Logic/Conductor")
 position = Vector2(0, 150)
 scale = Vector2(0.25, 0.25)
@@ -61,6 +63,6 @@ scale = Vector2(1152, 648)
 texture = SubResource("CanvasTexture_sugp2")
 
 [node name="Icon" type="Sprite2D" parent="Background"]
-position = Vector2(716, 357)
+position = Vector2(706, 366)
 scale = Vector2(2.6484375, 2.6484375)
 texture = ExtResource("1_ig7tw")
