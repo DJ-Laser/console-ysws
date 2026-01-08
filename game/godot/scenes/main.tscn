@@ -22,6 +22,13 @@ shader = ExtResource("5_tbgi4")
 song = ExtResource("1_sugp2")
 song_player = NodePath("../AudioStreamPlayer")
 
+[node name="NoteManager" type="NoteManager" parent="Rhythm Logic" node_paths=PackedStringArray("conductor")]
+conductor = NodePath("../Conductor")
+scroll_speed = 200.0
+input_latency_ms = 28.0
+position = Vector2(278.90308, 474)
+scale = Vector2(0.3, 0.3)
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Rhythm Logic"]
 
 [node name="Icon" type="Sprite2D" parent="."]
@@ -30,13 +37,6 @@ texture = ExtResource("1_ig7tw")
 
 [node name="Node2D" type="Node2D" parent="."]
 position = Vector2(278.903, 324)
-
-[node name="NoteManager" type="NoteManager" parent="Node2D" node_paths=PackedStringArray("conductor")]
-conductor = NodePath("../../Rhythm Logic/Conductor")
-scroll_speed = 200.0
-input_latency_ms = 28.0
-position = Vector2(6.1035156e-05, 150)
-scale = Vector2(0.3, 0.3)
 
 [node name="Upper Reticle" parent="Node2D" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
 conductor = NodePath("../../Rhythm Logic/Conductor")
@@ -52,22 +52,8 @@ scale = Vector2(0.25, 0.25)
 z_index = -100
 material = SubResource("ShaderMaterial_tefeu")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Background"]
-position = Vector2(1137, 155)
-scale = Vector2(4.4349594, 2.9619668)
-texture = ExtResource("1_ig7tw")
-
 [node name="Background" type="Sprite2D" parent="Background"]
 material = SubResource("ShaderMaterial_jyhfs")
 position = Vector2(576, 324)
 scale = Vector2(1152, 648)
 texture = SubResource("CanvasTexture_sugp2")
-
-[node name="Sprite2D" type="Sprite2D" parent="Background"]
-position = Vector2(772, 356)
-scale = Vector2(4.4349594, 2.9619668)
-texture = ExtResource("1_ig7tw")
-
-[node name="Line2D" type="Line2D" parent="Background"]
-position = Vector2(200, 174)
-points = PackedVector2Array(0, 0, 193, 237, 181, 304, -99, 29, 357, -100, 396, 443, 618, 408, 933, 397, 1111, 209, 885, 87)

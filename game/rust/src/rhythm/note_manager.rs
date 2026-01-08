@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use godot::{classes::Input, prelude::*};
 
 use crate::{
@@ -5,13 +7,11 @@ use crate::{
   rhythm::{
     conductor::Conductor,
     note_manager::event_queue::NoteEventQueue,
-    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow, RhythmInput},
   },
 };
 
 mod event_queue;
-
-const RHYTHM_INPUT_ACTION: &str = "rhythm_low";
 
 type DynNote = DynGd<Node, dyn Note>;
 
@@ -24,6 +24,10 @@ pub struct AssociatedNoteEvent {
 impl AssociatedNoteEvent {
   fn event_type(&self) -> NoteEventType {
     self.event.event_type()
+  }
+
+  fn input(&self) -> RhythmInput {
+    self.event.input()
   }
 
   fn at(&self) -> f64 {
@@ -56,7 +60,7 @@ pub struct NoteManager {
   #[init(val = 25.0)]
   input_latency_ms: f64,
 
-  events: NoteEventQueue,
+  events: HashMap<RhythmInput, NoteEventQueue>,
   held_events: Vec<AssociatedNoteEvent>,
 
   #[init(load = "res://objects/single_note/single_note.tscn")]
@@ -71,6 +75,7 @@ pub struct NoteManager {
 #[godot_api]
 impl INode2D for NoteManager {
   fn ready(&mut self) {
+    let mut input = RhythmInput::High;
     for i in 1..=20 {
       let note = self
         .single_note_scene
@@ -80,6 +85,12 @@ impl INode2D for NoteManager {
 
       note.bind_mut().set_hit_beat(i as f64 * 1.0);
       note.bind_mut().set_note_manager(Some(self.to_gd()));
+      note.bind_mut().set_rhythm_input(input.to_godot());
+
+      input = match input {
+        RhythmInput::High => RhythmInput::Low,
+        RhythmInput::Low => RhythmInput::High,
+      };
 
       self.base_mut().add_child(&note);
       self.add_note(note.into_dyn().upcast());
@@ -100,46 +111,13 @@ impl INode2D for NoteManager {
   }
 
   fn process(&mut self, _delta: f64) {
-    while let Some(next_event) = self.events.peek() {
-      let delta = self.get_event_delta(next_event);
-
-      if NoteTimingWindow::is_too_late(delta) {
-        // Dodge notes should get handled befote the miss window
-        if matches!(next_event.event_type(), NoteEventType::Dodge) {
-          godot_warn!("Dodge note not handled before miss timing");
-        }
-
-        self.hit_next_note(NoteTimingWindow::Miss);
-        // Continue to remove all missed notes this frame
-        continue;
-      }
-
-      let Some(rating) = NoteTimingWindow::from_delta(delta) else {
-        // Event was too early, wait till next frame
-        break;
-      };
-
-      match next_event.event_type() {
-        NoteEventType::Hit | NoteEventType::Hold => {
-          if Input::singleton().is_action_just_pressed(RHYTHM_INPUT_ACTION) {
-            self.hit_next_note(rating);
-          }
-        }
-        NoteEventType::Release => {
-          // Releases are handled seperately, and should not be in the main queue
-          godot_warn!("Release event in main event queue");
-          self.events.pop();
-        }
-        NoteEventType::Dodge => todo!("Dodge note handling"),
-      }
-
-      break;
-    }
+    self.process_event_queue(RhythmInput::High);
+    self.process_event_queue(RhythmInput::Low);
 
     let released_events: Vec<_> = self
       .held_events
-      .extract_if(.., |_event| {
-        !Input::singleton().is_action_pressed(RHYTHM_INPUT_ACTION)
+      .extract_if(.., |event| {
+        !Input::singleton().is_action_pressed(event.input().input_action())
       })
       .collect();
 
@@ -153,6 +131,57 @@ impl INode2D for NoteManager {
 
 #[godot_api]
 impl NoteManager {
+  fn process_event_queue(&mut self, input: RhythmInput) {
+    let Some(mut queue) = self.events.remove(&input) else {
+      return;
+    };
+
+    while let Some(next_event) = queue.peek() {
+      godot_print!("Queue iteration for {}", input.to_godot());
+      let delta = self.get_event_delta(next_event);
+
+      if NoteTimingWindow::is_too_late(delta) {
+        // Dodge notes should get handled befote the miss window
+        if matches!(next_event.event_type(), NoteEventType::Dodge) {
+          godot_warn!("Dodge note not handled before miss timing");
+        }
+
+        godot_print!(
+          "Missing note in {} queue at: {}",
+          next_event.input().to_godot(),
+          next_event.at()
+        );
+
+        self.hit_next_note(&mut queue, NoteTimingWindow::Miss);
+        // Continue to remove all missed notes this frame
+        continue;
+      }
+
+      let Some(rating) = NoteTimingWindow::from_delta(delta) else {
+        // Event was too early, wait till next frame
+        break;
+      };
+
+      match next_event.event_type() {
+        NoteEventType::Hit | NoteEventType::Hold => {
+          if Input::singleton().is_action_just_pressed(next_event.input().input_action()) {
+            self.hit_next_note(&mut queue, rating);
+          }
+        }
+        NoteEventType::Release => {
+          // Releases are handled seperately, and should not be in the main queue
+          godot_warn!("Release event in main event queue");
+          queue.pop();
+        }
+        NoteEventType::Dodge => todo!("Dodge note handling"),
+      }
+
+      break;
+    }
+
+    self.events.insert(input, queue);
+  }
+
   fn add_note(&mut self, note: DynNote) {
     let Some(event) = note.dyn_bind().get_next_event() else {
       return;
@@ -163,7 +192,8 @@ impl NoteManager {
         self.held_events.push(AssociatedNoteEvent::new(event, note));
       }
       _ => {
-        self.events.push(AssociatedNoteEvent::new(event, note));
+        let queue = self.events.entry(event.input()).or_default();
+        queue.push(AssociatedNoteEvent::new(event, note));
       }
     }
   }
@@ -177,9 +207,9 @@ impl NoteManager {
   }
 
   /// Hit the next note in the event queue with the provided rating
-  fn hit_next_note(&mut self, rating: NoteTimingWindow) {
-    let Some(event) = self.events.pop() else {
-      godot_warn!("hit_note called with empty event queue");
+  fn hit_next_note(&mut self, queue: &mut NoteEventQueue, rating: NoteTimingWindow) {
+    let Some(event) = queue.pop() else {
+      godot_warn!("hit_next_note called with empty event queue");
       return;
     };
 

@@ -6,7 +6,7 @@ use godot::{
 use crate::{
   rhythm::{
     note_manager::NoteManager,
-    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow, RhythmInput},
   },
   utils::shaders::glitch::GlitchShader,
 };
@@ -19,6 +19,8 @@ pub struct SingleNote {
 
   #[export]
   hit_beat: f64,
+  #[export]
+  rhythm_input: RhythmInput,
 
   #[init(val = false)]
   hit: bool,
@@ -47,7 +49,11 @@ impl INode2D for SingleNote {
 impl Note for SingleNote {
   fn get_next_event(&self) -> Option<NoteEvent> {
     if !self.hit {
-      Some(NoteEvent::new(NoteEventType::Hit, self.hit_beat))
+      Some(NoteEvent::new(
+        NoteEventType::Hit,
+        self.rhythm_input,
+        self.hit_beat,
+      ))
     } else {
       None
     }

@@ -3,7 +3,7 @@ use godot::{classes::Sprite2D, prelude::*};
 use crate::{
   rhythm::{
     note_manager::NoteManager,
-    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow, RhythmInput},
   },
   utils::shaders::glitch::GlitchShader,
 };
@@ -25,6 +25,8 @@ pub struct HeldNote {
   start_beat: f64,
   #[export]
   release_beat: f64,
+  #[export]
+  rhythm_input: RhythmInput,
 
   #[init(val = NoteState::PreHit)]
   note_state: NoteState,
@@ -137,8 +139,16 @@ impl HeldNote {
 impl Note for HeldNote {
   fn get_next_event(&self) -> Option<NoteEvent> {
     match self.note_state {
-      NoteState::PreHit => Some(NoteEvent::new(NoteEventType::Hold, self.start_beat)),
-      NoteState::Holding => Some(NoteEvent::new(NoteEventType::Release, self.release_beat)),
+      NoteState::PreHit => Some(NoteEvent::new(
+        NoteEventType::Hold,
+        self.rhythm_input,
+        self.start_beat,
+      )),
+      NoteState::Holding => Some(NoteEvent::new(
+        NoteEventType::Release,
+        self.rhythm_input,
+        self.release_beat,
+      )),
       NoteState::Free => None,
     }
   }

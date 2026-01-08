@@ -1,3 +1,5 @@
+use godot::prelude::*;
+
 #[derive(Debug, Clone, Copy)]
 pub enum NoteTimingWindow {
   Perfect,
@@ -53,21 +55,46 @@ pub enum NoteEventType {
   Dodge,
 }
 
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash, GodotConvert, Var, Export)]
+#[godot(via = GString)]
+pub enum RhythmInput {
+  High,
+  #[default]
+  Low,
+}
+
+impl RhythmInput {
+  pub fn input_action(&self) -> &'static str {
+    match self {
+      Self::High => "rhythm_high",
+      Self::Low => "rhythm_low",
+    }
+  }
+}
+
 /// Note type, which input to press, and time in beats
 #[derive(Debug)]
 pub struct NoteEvent {
   event_type: NoteEventType,
-  // input: ??
+  input: RhythmInput,
   at: f64,
 }
 
 impl NoteEvent {
-  pub fn new(event_type: NoteEventType, at: f64) -> Self {
-    Self { event_type, at }
+  pub fn new(event_type: NoteEventType, input: RhythmInput, at: f64) -> Self {
+    Self {
+      event_type,
+      input,
+      at,
+    }
   }
 
   pub fn event_type(&self) -> NoteEventType {
     self.event_type
+  }
+
+  pub fn input(&self) -> RhythmInput {
+    self.input
   }
 
   pub fn at(&self) -> f64 {
