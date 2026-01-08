@@ -31,44 +31,68 @@ pub struct BeatmapLoader {
 
 #[godot_api]
 impl BeatmapLoader {
-  pub fn load_beatmap_sprites(
+  fn load_single_note(
     &mut self,
     note_manager: Gd<NoteManager>,
-    mut add_note: impl FnMut(DynNote),
-  ) {
-    let mut input = RhythmInput::High;
-    for i in 1..=20 {
-      let note = self
-        .single_note_scene
-        .instantiate()
-        .expect("Scene should be valid");
-      let mut note: Gd<SingleNote> = note.cast();
+    at: f64,
+    input: RhythmInput,
+  ) -> DynNote {
+    let note = self
+      .single_note_scene
+      .instantiate()
+      .expect("Scene should be valid");
+    let mut note: Gd<SingleNote> = note.cast();
 
-      note.bind_mut().set_hit_beat(i as f64 * 1.0);
-      note.bind_mut().set_note_manager(Some(note_manager.clone()));
-      note.bind_mut().set_rhythm_input(input.to_godot());
+    note.bind_mut().set_hit_beat(at);
+    note.bind_mut().set_note_manager(Some(note_manager.clone()));
+    note.bind_mut().set_rhythm_input(input.to_godot());
 
-      input = match input {
-        RhythmInput::High => RhythmInput::Low,
-        RhythmInput::Low => RhythmInput::High,
-      };
+    self.base_mut().add_child(&note);
+    note.into_dyn().upcast()
+  }
 
-      self.base_mut().add_child(&note);
-      add_note(note.into_dyn().upcast());
-    }
-
+  fn load_held_note(
+    &mut self,
+    note_manager: Gd<NoteManager>,
+    at: f64,
+    end: f64,
+    input: RhythmInput,
+  ) -> DynNote {
     let note = self
       .held_note_scene
       .instantiate()
       .expect("Scene should be valid");
     let mut note: Gd<HeldNote> = note.cast();
 
-    note.bind_mut().set_start_beat(24.0);
-    note.bind_mut().set_release_beat(30.0);
+    note.bind_mut().set_start_beat(at);
+    note.bind_mut().set_release_beat(end);
+    note.bind_mut().set_rhythm_input(input.to_godot());
     note.bind_mut().set_note_manager(Some(note_manager.clone()));
 
     self.base_mut().add_child(&note);
-    add_note(note.into_dyn().upcast());
+    note.into_dyn().upcast()
+  }
+
+  pub fn load_beatmap_sprites(
+    &mut self,
+    note_manager: Gd<NoteManager>,
+    mut add_note: impl FnMut(DynNote),
+  ) {
+    add_note(self.load_single_note(note_manager.clone(), 2.0, RhythmInput::Low));
+    add_note(self.load_single_note(note_manager.clone(), 2.0, RhythmInput::High));
+
+    let mut input = RhythmInput::High;
+    for i in 3..=20 {
+      add_note(self.load_single_note(note_manager.clone(), i as f64, input));
+
+      input = match input {
+        RhythmInput::High => RhythmInput::Low,
+        RhythmInput::Low => RhythmInput::High,
+      };
+    }
+
+    add_note(self.load_held_note(note_manager.clone(), 24.0, 30.0, RhythmInput::Low));
+    add_note(self.load_held_note(note_manager.clone(), 27.0, 30.0, RhythmInput::High));
   }
 
   /// Get the position of the hit location for the given input track
