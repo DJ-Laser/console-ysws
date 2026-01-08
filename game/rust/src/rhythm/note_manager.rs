@@ -120,7 +120,6 @@ impl NoteManager {
     };
 
     while let Some(next_event) = queue.peek() {
-      godot_print!("Queue iteration for {}", input.to_godot());
       let delta = self.get_event_delta(next_event);
 
       if NoteTimingWindow::is_too_late(delta) {
@@ -128,12 +127,6 @@ impl NoteManager {
         if matches!(next_event.event_type(), NoteEventType::Dodge) {
           godot_warn!("Dodge note not handled before miss timing");
         }
-
-        godot_print!(
-          "Missing note in {} queue at: {}",
-          next_event.input().to_godot(),
-          next_event.at()
-        );
 
         self.hit_next_note(&mut queue, NoteTimingWindow::Miss);
         // Continue to remove all missed notes this frame
@@ -186,7 +179,6 @@ impl NoteManager {
     //TODO: Check hold notes for realy release, probably with a vec of notes or something
     event.note.dyn_bind_mut().hit(rating);
     self.add_note(event.note);
-    godot_print!("Note {:?}", rating);
   }
 
   /// Hit the next note in the event queue with the provided rating
