@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=9 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="1_ig7tw"]
 [ext_resource type="Song" uid="uid://dww016k0co24y" path="res://audio/songs/the_comeback/the_comeback.tres" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://c3c4v3nt0j1ym" path="res://objects/reticle/reticle.tscn" id="3_sugp2"]
+[ext_resource type="Shader" uid="uid://bo8m6lmwuvomd" path="res://shaders/pixelate/pixelate.gdshader" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://dyql3bhuynagn" path="res://shaders/background.gdshader" id="5_tbgi4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tefeu"]
+shader = ExtResource("4_tbgi4")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
 shader = ExtResource("5_tbgi4")
@@ -21,11 +25,11 @@ song_player = NodePath("../AudioStreamPlayer")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Rhythm Logic"]
 
 [node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(121, 324)
+position = Vector2(122, 324)
 texture = ExtResource("1_ig7tw")
 
 [node name="Node2D" type="Node2D" parent="."]
-position = Vector2(277.903, 324)
+position = Vector2(278.903, 324)
 
 [node name="NoteManager" type="NoteManager" parent="Node2D" node_paths=PackedStringArray("conductor")]
 conductor = NodePath("../../Rhythm Logic/Conductor")
@@ -44,9 +48,26 @@ conductor = NodePath("../../Rhythm Logic/Conductor")
 position = Vector2(0, 150)
 scale = Vector2(0.25, 0.25)
 
-[node name="Background" type="Sprite2D" parent="."]
+[node name="Background" type="CanvasGroup" parent="."]
 z_index = -100
+material = SubResource("ShaderMaterial_tefeu")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Background"]
+position = Vector2(1137, 155)
+scale = Vector2(4.4349594, 2.9619668)
+texture = ExtResource("1_ig7tw")
+
+[node name="Background" type="Sprite2D" parent="Background"]
 material = SubResource("ShaderMaterial_jyhfs")
 position = Vector2(576, 324)
 scale = Vector2(1152, 648)
 texture = SubResource("CanvasTexture_sugp2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Background"]
+position = Vector2(772, 356)
+scale = Vector2(4.4349594, 2.9619668)
+texture = ExtResource("1_ig7tw")
+
+[node name="Line2D" type="Line2D" parent="Background"]
+position = Vector2(200, 174)
+points = PackedVector2Array(0, 0, 193, 237, 181, 304, -99, 29, 357, -100, 396, 443, 618, 408, 933, 397, 1111, 209, 885, 87)

@@ -67,7 +67,7 @@ impl IRefCounted for GlitchShader {
     material.set_shader_parameter("noise_strength", &0.0.to_variant());
     material.set_shader_parameter("color_flash_strength", &0.0.to_variant());
     material.set_shader_parameter("scanline_strength", &0.18.to_variant());
-    material.set_shader_parameter("local_warp_strength", &0.14.to_variant());
+    material.set_shader_parameter("local_warp_strength", &0.0.to_variant());
     material.set_shader_parameter("flip_chance", &0.0.to_variant());
     material.set_shader_parameter("slice_drop_chance", &0.0.to_variant());
 

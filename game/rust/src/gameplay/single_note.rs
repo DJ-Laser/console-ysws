@@ -67,7 +67,7 @@ impl Note for SingleNote {
 
     self.note_sprite.set_material(&material);
 
-    let duration = 0.1;
+    let duration = 0.2;
 
     tween.tween_property(
       &shader,

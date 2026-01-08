@@ -1,9 +1,9 @@
-shader_type canvas_item;
-
 // Shader by: arlez80
 // https://godotshaders.com/shader/glitch-effect-shader-for-godot-engine-4/
 
 // Modified to be more of a "fade out" effect
+
+shader_type canvas_item;
 
 /* ================= SETTINGS ================= */
 

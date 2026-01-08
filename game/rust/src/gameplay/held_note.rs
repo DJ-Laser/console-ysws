@@ -93,9 +93,9 @@ impl HeldNote {
 
     {
       let mut shader = shader.bind_mut();
-      shader.set_glitch_chance(0.9);
+      shader.set_glitch_chance(0.95);
       shader.set_chroma_offset(0.0);
-      shader.set_glitch_speed(5.0);
+      shader.set_glitch_speed(8.0);
       shader.set_slice_strength(0.3);
     }
 
