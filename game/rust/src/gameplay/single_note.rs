@@ -38,10 +38,10 @@ impl INode2D for SingleNote {
       return;
     }
 
-    let position = self.note_manager.bind().get_note_position(self.hit_beat);
-    self
-      .note_sprite
-      .set_position(Vector2::new(position as f32, 0.0));
+    let x = self.note_manager.bind().get_note_position(self.hit_beat);
+    let y = self.note_manager.bind().get_note_track(self.rhythm_input);
+
+    self.note_sprite.set_position(Vector2::new(x, y));
   }
 }
 

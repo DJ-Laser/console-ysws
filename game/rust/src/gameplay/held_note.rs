@@ -50,43 +50,41 @@ impl INode2D for HeldNote {
 
     let note_manager = self.note_manager.bind();
 
-    let start_position = if matches!(self.note_state, NoteState::PreHit) {
+    let start_x = if matches!(self.note_state, NoteState::PreHit) {
       note_manager.get_note_position(self.start_beat)
     } else {
       0.0
     };
 
-    let end_position = if note_manager.get_current_beat() <= self.release_beat {
+    let end_x = if note_manager.get_current_beat() <= self.release_beat {
       note_manager.get_note_position(self.release_beat)
     } else {
       0.0
     };
 
+    let y = note_manager.get_note_track(self.rhythm_input);
+
     drop(note_manager);
 
-    self.position_track(start_position, end_position);
+    self.position_track(start_x, end_x, y);
   }
 }
 
 #[godot_api]
 impl HeldNote {
-  fn position_track(&mut self, start_position: f64, end_position: f64) {
-    self
-      .start_sprite
-      .set_position(Vector2::new(start_position as f32, 0.0));
+  fn position_track(&mut self, start_x: f32, end_x: f32, y: f32) {
+    self.start_sprite.set_position(Vector2::new(start_x, y));
 
-    let track_width = (start_position - end_position).abs() as f32;
+    let track_width = (start_x - end_x).abs();
     let mut track_region = self.track_sprite.get_region_rect();
     track_region.size.x = track_width;
     self.track_sprite.set_region_rect(track_region);
 
     self
       .track_sprite
-      .set_position(Vector2::new(start_position as f32 + track_width / 2.0, 0.0));
+      .set_position(Vector2::new(start_x + track_width / 2.0, y));
 
-    self
-      .end_sprite
-      .set_position(Vector2::new(end_position as f32, 0.0));
+    self.end_sprite.set_position(Vector2::new(end_x, y));
   }
 
   fn hold_animation(&mut self) {

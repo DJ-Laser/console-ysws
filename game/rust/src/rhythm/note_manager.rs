@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use godot::{classes::Input, prelude::*};
 
 use crate::{
-  gameplay::{held_note::HeldNote, single_note::SingleNote},
+  gameplay::{held_note::HeldNote, reticle::Reticle, single_note::SingleNote},
   rhythm::{
     conductor::Conductor,
     note_manager::event_queue::NoteEventQueue,
@@ -59,6 +59,11 @@ pub struct NoteManager {
   #[export]
   #[init(val = 25.0)]
   input_latency_ms: f64,
+
+  #[export]
+  high_hit_location: OnEditor<Gd<Reticle>>,
+  #[export]
+  low_hit_location: OnEditor<Gd<Reticle>>,
 
   events: HashMap<RhythmInput, NoteEventQueue>,
   held_events: Vec<AssociatedNoteEvent>,
@@ -232,10 +237,22 @@ impl NoteManager {
 
   /// Get the position in px for note's beat poition
   #[func]
-  pub fn get_note_position(&self, position_beats: f64) -> f64 {
+  pub fn get_note_position(&self, position_beats: f64) -> f32 {
     let beat_offset = self.get_current_beat() - position_beats;
     // Scaling changes the relative speed of the notes, so divide to keep the scroll speed relative to global units
     let scroll_speed = self.scroll_speed / (self.base().get_scale().x as f64);
-    -beat_offset * scroll_speed
+    (-beat_offset * scroll_speed) as f32
+  }
+
+  /// Get the verical position in px for note's track
+  #[func]
+  pub fn get_note_track(&self, input_track: RhythmInput) -> f32 {
+    let global_pos = match input_track {
+      RhythmInput::High => self.high_hit_location.get_global_position(),
+      RhythmInput::Low => self.low_hit_location.get_global_position(),
+    };
+
+    let local_pos = self.base().to_local(global_pos);
+    local_pos.y
   }
 }
