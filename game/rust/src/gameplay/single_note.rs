@@ -1,8 +1,14 @@
-use godot::{classes::Sprite2D, prelude::*};
+use godot::{
+  classes::{ShaderMaterial, Sprite2D},
+  prelude::*,
+};
 
-use crate::rhythm::{
-  note_manager::NoteManager,
-  notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+use crate::{
+  rhythm::{
+    note_manager::NoteManager,
+    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+  },
+  utils::shaders::glitch::GlitchShader,
 };
 
 #[derive(Debug, GodotClass)]
@@ -27,7 +33,6 @@ pub struct SingleNote {
 impl INode2D for SingleNote {
   fn process(&mut self, _delta: f64) {
     if self.hit {
-      self.base_mut().queue_free();
       return;
     }
 
@@ -50,5 +55,30 @@ impl Note for SingleNote {
 
   fn hit(&mut self, _rating: NoteTimingWindow) {
     self.hit = true;
+
+    let mut tween = self
+      .base_mut()
+      .create_tween()
+      .expect("Tween should not fail to create");
+
+    let shader = GlitchShader::new_gd();
+    let material = shader.bind().material();
+    let material = material.cast::<ShaderMaterial>();
+
+    self.note_sprite.set_material(&material);
+
+    let duration = 0.1;
+
+    tween.tween_property(
+      &shader,
+      GlitchShader::SLICE_DROP_CHANCE_PARAM,
+      &1.0.to_variant(),
+      duration,
+    );
+
+    /*tween
+    .tween_callback(&self.base().callable("queue_free"))
+    .expect("tween shouldn't fail")
+    .set_delay(duration);*/
   }
 }

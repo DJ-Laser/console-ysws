@@ -12,5 +12,5 @@ texture = ExtResource("1_01o6s")
 
 [node name="Crosshair" type="Sprite2D" parent="."]
 unique_name_in_owner = true
-z_index = 10
+z_index = -10
 texture = ExtResource("2_0qs1e")

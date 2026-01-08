@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cqow47bch5ocs"]
+[gd_scene load_steps=7 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="1_ig7tw"]
 [ext_resource type="Song" uid="uid://dww016k0co24y" path="res://audio/songs/the_comeback/the_comeback.tres" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://c3c4v3nt0j1ym" path="res://objects/reticle/reticle.tscn" id="3_sugp2"]
+[ext_resource type="Shader" uid="uid://dyql3bhuynagn" path="res://shaders/background.gdshader" id="5_tbgi4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
+shader = ExtResource("5_tbgi4")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_sugp2"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -12,25 +18,35 @@
 song = ExtResource("1_sugp2")
 song_player = NodePath("../AudioStreamPlayer")
 
-[node name="NoteManager" type="NoteManager" parent="Rhythm Logic" node_paths=PackedStringArray("conductor")]
-conductor = NodePath("../Conductor")
-scroll_speed = 200.0
-input_latency_ms = 28.0
-position = Vector2(373, 404)
-scale = Vector2(0.4, 0.4)
-
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Rhythm Logic"]
 
 [node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(121, 268)
+position = Vector2(121, 324)
 texture = ExtResource("1_ig7tw")
 
-[node name="Upper Reticle" parent="." node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
-conductor = NodePath("../Rhythm Logic/Conductor")
-position = Vector2(375.99994, 106)
-scale = Vector2(0.4, 0.4)
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(277.903, 324)
 
-[node name="Lower Reticle" parent="." node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
-conductor = NodePath("../Rhythm Logic/Conductor")
-position = Vector2(372.99994, 404)
-scale = Vector2(0.4, 0.4)
+[node name="NoteManager" type="NoteManager" parent="Node2D" node_paths=PackedStringArray("conductor")]
+conductor = NodePath("../../Rhythm Logic/Conductor")
+scroll_speed = 200.0
+input_latency_ms = 28.0
+position = Vector2(6.1035156e-05, 150)
+scale = Vector2(0.3, 0.3)
+
+[node name="Upper Reticle" parent="Node2D" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
+conductor = NodePath("../../Rhythm Logic/Conductor")
+position = Vector2(0, -150)
+scale = Vector2(0.25, 0.25)
+
+[node name="Lower Reticle" parent="Node2D" node_paths=PackedStringArray("conductor") instance=ExtResource("3_sugp2")]
+conductor = NodePath("../../Rhythm Logic/Conductor")
+position = Vector2(0, 150)
+scale = Vector2(0.25, 0.25)
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -100
+material = SubResource("ShaderMaterial_jyhfs")
+position = Vector2(576, 324)
+scale = Vector2(1152, 648)
+texture = SubResource("CanvasTexture_sugp2")

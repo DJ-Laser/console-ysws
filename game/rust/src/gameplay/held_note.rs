@@ -1,8 +1,11 @@
 use godot::{classes::Sprite2D, prelude::*};
 
-use crate::rhythm::{
-  note_manager::NoteManager,
-  notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+use crate::{
+  rhythm::{
+    note_manager::NoteManager,
+    notes::{Note, NoteEvent, NoteEventType, NoteTimingWindow},
+  },
+  utils::shaders::glitch::GlitchShader,
 };
 
 #[derive(Debug)]
@@ -40,7 +43,6 @@ pub struct HeldNote {
 impl INode2D for HeldNote {
   fn process(&mut self, _delta: f64) {
     if matches!(self.note_state, NoteState::Free) {
-      self.base_mut().queue_free();
       return;
     }
 
@@ -84,6 +86,51 @@ impl HeldNote {
       .end_sprite
       .set_position(Vector2::new(end_position as f32, 0.0));
   }
+
+  fn hold_animation(&mut self) {
+    let mut shader = GlitchShader::new_gd();
+    let material = shader.bind().material();
+
+    {
+      let mut shader = shader.bind_mut();
+      shader.set_glitch_chance(0.9);
+      shader.set_chroma_offset(0.0);
+      shader.set_glitch_speed(5.0);
+      shader.set_slice_strength(0.3);
+    }
+
+    self.start_sprite.set_material(&material);
+    self.end_sprite.set_material(&material);
+    self.track_sprite.set_material(&material);
+  }
+
+  fn hit_animation(&mut self) {
+    let mut tween = self
+      .base_mut()
+      .create_tween()
+      .expect("Tween should not fail to create");
+
+    let shader = GlitchShader::new_gd();
+    let material = shader.bind().material();
+
+    self.start_sprite.set_material(&material);
+    self.end_sprite.set_material(&material);
+    self.track_sprite.set_material(&material);
+
+    let duration = 0.2;
+
+    tween.tween_property(
+      &shader,
+      GlitchShader::SLICE_DROP_CHANCE_PARAM,
+      &1.0.to_variant(),
+      duration,
+    );
+
+    tween
+      .tween_callback(&self.base().callable("queue_free"))
+      .expect("tween shouldn't fail")
+      .set_delay(duration);
+  }
 }
 
 #[godot_dyn]
@@ -99,12 +146,19 @@ impl Note for HeldNote {
   fn hit(&mut self, rating: NoteTimingWindow) {
     if matches!(rating, NoteTimingWindow::Miss) {
       self.note_state = NoteState::Free;
+      self.hit_animation();
       return;
     }
 
     match self.note_state {
-      NoteState::PreHit => self.note_state = NoteState::Holding,
-      NoteState::Holding => self.note_state = NoteState::Free,
+      NoteState::PreHit => {
+        self.note_state = NoteState::Holding;
+        self.hold_animation();
+      }
+      NoteState::Holding => {
+        self.note_state = NoteState::Free;
+        self.hit_animation();
+      }
       NoteState::Free => (),
     }
   }
