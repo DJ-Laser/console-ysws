@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3c4v3nt0j1ym"]
 
-[ext_resource type="Texture2D" uid="uid://dkr1d08e0pgu6" path="res://objects/reticle/Ring.svg" id="1_01o6s"]
-[ext_resource type="Texture2D" uid="uid://d0ffimlx0i5ju" path="res://objects/reticle/Crosshair.svg" id="2_0qs1e"]
+[ext_resource type="Texture2D" uid="uid://vebv5blaq2i" path="res://objects/reticle/Ring.png" id="1_01o6s"]
+[ext_resource type="Texture2D" uid="uid://dvbwkp1rg24jx" path="res://objects/reticle/Crosshair.png" id="2_0qs1e"]
 
 [node name="Reticle" type="Reticle"]
 

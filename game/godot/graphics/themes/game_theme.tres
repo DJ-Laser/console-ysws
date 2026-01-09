@@ -1,0 +1,35 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://b8mh5ev0y3jem"]
+
+[ext_resource type="FontFile" uid="uid://cemx4ah3xmw18" path="res://graphics/fonts/Orbitron-VariableFont_wght.ttf" id="1_i2gce"]
+
+[sub_resource type="FontVariation" id="FontVariation_84na2"]
+base_font = ExtResource("1_i2gce")
+variation_opentype = {
+2003265652: 800
+}
+
+[sub_resource type="FontVariation" id="FontVariation_okpsa"]
+base_font = ExtResource("1_i2gce")
+variation_opentype = {
+2003265652: 800
+}
+variation_transform = Transform2D(1, 0.2, 0, 1, 0, 0)
+
+[sub_resource type="FontVariation" id="FontVariation_m1y75"]
+base_font = ExtResource("1_i2gce")
+variation_transform = Transform2D(1, 0.2, 0, 1, 0, 0)
+
+[resource]
+Button/fonts/font = ExtResource("1_i2gce")
+Label/fonts/font = ExtResource("1_i2gce")
+LineEdit/fonts/font = ExtResource("1_i2gce")
+ProgressBar/fonts/font = ExtResource("1_i2gce")
+RichTextLabel/fonts/bold_font = SubResource("FontVariation_84na2")
+RichTextLabel/fonts/bold_italics_font = SubResource("FontVariation_okpsa")
+RichTextLabel/fonts/italics_font = SubResource("FontVariation_m1y75")
+RichTextLabel/fonts/normal_font = ExtResource("1_i2gce")
+TabBar/fonts/font = ExtResource("1_i2gce")
+TabContainer/fonts/font = ExtResource("1_i2gce")
+TextEdit/fonts/font = ExtResource("1_i2gce")
+Tree/fonts/font = ExtResource("1_i2gce")
+Tree/fonts/title_button_font = ExtResource("1_i2gce")

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bv8rx426eo6nh"]
+
+[ext_resource type="Script" uid="uid://2o13ktqy8wup" path="res://graphics/rich_text_effects/matrix_effect.gd" id="1_rd0g7"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_o5i6p"]
+script = ExtResource("1_rd0g7")
+metadata/_custom_type_script = "uid://2o13ktqy8wup"
+
+[node name="MatrixText" type="RichTextLabel"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+theme_override_font_sizes/normal_font_size = 64
+theme_override_font_sizes/bold_font_size = 64
+theme_override_font_sizes/bold_italics_font_size = 64
+theme_override_font_sizes/italics_font_size = 64
+bbcode_enabled = true
+text = "[b][matrix]PERFECT"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 2
+custom_effects = [SubResource("RichTextEffect_o5i6p")]

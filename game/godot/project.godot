@@ -24,6 +24,10 @@ window/stretch/mode="canvas_items"
 
 enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
 
+[gui]
+
+theme/custom="uid://b8mh5ev0y3jem"
+
 [input]
 
 rhythm_low={

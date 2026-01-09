@@ -53,7 +53,7 @@ pub struct GlitchShader {
 #[godot_api]
 impl IRefCounted for GlitchShader {
   fn init(base: Base<RefCounted>) -> Self {
-    let shader: Gd<Shader> = load("res://shaders/glitch.gdshader");
+    let shader: Gd<Shader> = load("res://graphics/shaders/glitch.gdshader");
     let mut material = ShaderMaterial::new_gd();
 
     material.set_shader(&shader);
