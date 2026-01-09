@@ -38,3 +38,13 @@ Last I made a "safe" (theres no UB, but it prevents dumb typo bugs) wrapper for 
 I'm planning to make a cool background in glsl (shader) script, maybe even one that reacts to the game audio (that would actually be a really cool Idea I'm totally gonna do that If I can)
 
 Tmrw I need to implement the second track and make a chart for the song though, and hopefully I can also fugure out how to make a character and dodge notes by sunday.
+
+### Jan 8
+
+I made the notes be triggered by seperate inputs, and show up on the high and low tracks to distinguish them.
+
+I then spent a lot of time refactoring how the note instances are created in preparation for deserializing chart files. Now the BeatmapLoader node handles instantiating all the notes with it's `load_beatmap_sprites` method.
+
+The NoteManager now has a reference to the BeatmapLoader to get note positions since they are now children of the BeatmapLoader instead of the NoteManager.
+
+After the BeatmapLoader is ready, the NoteManager calls load_beatmap_sprites and adds all the resulting notes to the event queue.
