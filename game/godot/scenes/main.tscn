@@ -37,6 +37,13 @@ texture = ExtResource("1_ig7tw")
 [node name="Rhythm Gameplay Elements" type="Node2D" parent="."]
 position = Vector2(278.903, 324)
 
+[node name="RichTextLabel" parent="Rhythm Gameplay Elements" instance=ExtResource("5_o6xl0")]
+offset_left = 31.096985
+offset_top = -175.0
+offset_right = 1454.0969
+offset_bottom = 75.0
+text = "[b][matrix oneshot=true]PERFECT"
+
 [node name="BeatmapLoader" type="BeatmapLoader" parent="Rhythm Gameplay Elements" node_paths=PackedStringArray("high_hit_location", "low_hit_location")]
 beatmap = ExtResource("1_tefeu")
 high_hit_location = NodePath("../High Reticle")
@@ -52,8 +59,6 @@ scale = Vector2(0.3, 0.3)
 conductor = NodePath("../../Rhythm Logic/Conductor")
 position = Vector2(0, 150)
 scale = Vector2(0.3, 0.3)
-
-[node name="RichTextLabel" parent="Rhythm Gameplay Elements/Low Reticle" instance=ExtResource("5_o6xl0")]
 
 [node name="Background" type="CanvasGroup" parent="."]
 z_index = -100

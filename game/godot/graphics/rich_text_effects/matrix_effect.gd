@@ -1,6 +1,6 @@
 @tool
 extends RichTextEffect
-class_name RichTextMatrix
+class_name RichTextMatrixInOut
 
 # Syntax: [matrix clean=2.0 dirty=1.0 span=50][/matrix]
 
@@ -11,28 +11,42 @@ var bbcode = "matrix"
 func get_text_server():
 	return TextServerManager.get_primary_interface()
 
-func _process_custom_fx(char_fx):
+func _process_custom_fx(char_fx: CharFXTransform):
 	# Get parameters, or use the provided default value if missing.
-	var dirty_time = char_fx.env.get("dirty", 0.15)
-	var clear_time = char_fx.env.get("clean", 1.0)
-	var text_span = char_fx.env.get("span", 20)
+	var in_time = char_fx.env.get("in", 0.1)
+	var clear_time = char_fx.env.get("clean", 0.5)
+	var out_time = char_fx.env.get("out", 0.15)
+	var text_delay = char_fx.env.get("text_delay", 0.01)
 	
-	var matrix_time = char_fx.elapsed_time - char_fx.range.x / float(text_span)
+	var end_clear_time = in_time + clear_time;
+	var end_time = end_clear_time + out_time;
 	
-	var end_clear_time = dirty_time + clear_time;
-	var end_dirty_time = end_clear_time + dirty_time;
+	var effect_time = char_fx.elapsed_time - char_fx.range.x * text_delay
 	
 	if Engine.is_editor_hint():
-		matrix_time = fmod(matrix_time, end_dirty_time + 1.0)
+		effect_time = fmod(effect_time, end_time + 1.0)
 	
-	if matrix_time < 0 || matrix_time > end_dirty_time:
+	if effect_time < 0:
 		char_fx.color = Color.TRANSPARENT
-	elif matrix_time < dirty_time || matrix_time > end_clear_time:
-		var value = char_fx.glyph_index
-		value += int(1 * matrix_time * (126 - 65))
-		value %= (126 - 65)
-		value += 65
+	elif effect_time < in_time:
+		_matrix_text(char_fx, effect_time)
+	elif effect_time < end_clear_time:
+		# Show the original character
+		return false
+	elif effect_time < end_time:
+		_matrix_text(char_fx, effect_time)
 		
-		char_fx.glyph_index = get_text_server().font_get_glyph_index(char_fx.font, 1, value, 0)
+		var char_alpha = (end_time - effect_time) / out_time
+		char_fx.color.a = char_alpha
+	else:
+		char_fx.color = Color.TRANSPARENT
 	
 	return true
+
+func _matrix_text(char_fx: CharFXTransform, matrix_time: float):
+	var value = char_fx.glyph_index
+	value += int(1 * matrix_time * (126 - 65))
+	value %= (126 - 65)
+	value += 65
+	
+	char_fx.glyph_index = get_text_server().font_get_glyph_index(char_fx.font, 1, value, 0)
