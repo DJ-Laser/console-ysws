@@ -15,16 +15,16 @@
     pkgs = import nixpkgs {inherit system overlays;};
     lib = pkgs.lib;
 
-    rustToolchain = pkgs.pkgsBuildHost.rust-bin.stable.latest.default.override {
+    rustToolchain = pkgs.pkgsBuildHost.rust-bin.selectLatestNightlyWith (toolchain: toolchain.default.override {
       extensions = ["rust-src"];
-    };
+      targets = ["wasm32-unknown-emscripten"];
+    });
 
   in {
     devShells.${system}.default = pkgs.mkShell {
-      buildInputs = with pkgs; [rustToolchain];
-      shellHook = ''
-        export RUST_SRC_PATH =${rustToolchain}/lib/rustlib/src/rust/src
-      '';
+      buildInputs = with pkgs; [rustToolchain emscripten];
+        RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/src";
+        LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
     };
   };
 }

@@ -12,3 +12,6 @@ macos.debug =            "res://../rust/target/debug/librust.dylib"
 macos.release =          "res://../rust/target/release/librust.dylib"
 macos.debug.arm64 =      "res://../rust/target/debug/librust.dylib"
 macos.release.arm64 =    "res://../rust/target/release/librust.dylib"
+
+wasm32.debug =           "res://../rust/target/wasm32-unknown-emscripten/debug/rust.wasm"
+wasm32.release =           "res://../rust/target/wasm32-unknown-emscripten/release/rust.wasm"

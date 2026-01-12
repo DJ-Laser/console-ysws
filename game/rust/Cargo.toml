@@ -7,6 +7,11 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-godot = "0.4.5"
+# godot = "0.4.5"
 ordered-float = "5.1.0"
 paste = "1.0.15"
+
+[dependencies.godot]
+git = "https://github.com/godot-rust/gdext"
+branch = "master"
+features = ["api-custom", "experimental-wasm", "lazy-function-tables"]
