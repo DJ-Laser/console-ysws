@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c3c4v3nt0j1ym" path="res://objects/reticle/reticle.tscn" id="3_sugp2"]
 [ext_resource type="Shader" uid="uid://bo8m6lmwuvomd" path="res://graphics/shaders/pixelate/pixelate.gdshader" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://dyql3bhuynagn" path="res://graphics/shaders/background.gdshader" id="5_tbgi4"]
-[ext_resource type="Script" uid="uid://qfoxy22d2fu1" path="res://scenes/bg_icon_sine.gd" id="7_o6xl0"]
+[ext_resource type="Script" uid="uid://qfoxy22d2fu1" path="res://scenes/game/bg_icon_sine.gd" id="7_o6xl0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tefeu"]
 shader = ExtResource("4_tbgi4")
