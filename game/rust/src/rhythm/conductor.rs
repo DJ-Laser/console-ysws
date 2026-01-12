@@ -4,11 +4,12 @@ use godot::{
 };
 
 use crate::rhythm::{
-  conductor::{filter::OneEuroFilter, timer::SongTimer},
+  conductor::{filter::OneEuroFilter, pulse_tracker::PulseTracker, timer::SongTimer},
   song::Song,
 };
 
 mod filter;
+pub mod pulse_tracker;
 mod timer;
 
 /// Handles Playing the song audio and synchronizing game events to the music
@@ -110,5 +111,12 @@ impl Conductor {
   #[func]
   pub fn get_beat_duration(&self) -> f64 {
     self.song_timer.get_beat_duration()
+  }
+
+  #[func]
+  pub fn new_pulse_tracker(&self) -> Gd<PulseTracker> {
+    let mut pulse_tracker = PulseTracker::new_alloc();
+    pulse_tracker.bind_mut().set_conductor(Some(self.to_gd()));
+    pulse_tracker
   }
 }

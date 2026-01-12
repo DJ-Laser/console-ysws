@@ -48,3 +48,12 @@ I then spent a lot of time refactoring how the note instances are created in pre
 The NoteManager now has a reference to the BeatmapLoader to get note positions since they are now children of the BeatmapLoader instead of the NoteManager.
 
 After the BeatmapLoader is ready, the NoteManager calls load_beatmap_sprites and adds all the resulting notes to the event queue.
+
+### Jan 9
+
+I started making text that appears when you hit a note for timing feedback
+I made the matrix example effect from the godot docs except it fades out and only appears once, instead of repeating. The idea is to spawn one per note hit.
+
+### Jan 10
+
+Today was frc kickoff, so I didn't do anything
