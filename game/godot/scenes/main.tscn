@@ -5,8 +5,8 @@
 [ext_resource type="Beatmap" uid="uid://b4ofews21usx1" path="res://audio/songs/the_comeback/the_comeback_beatmap.tres" id="1_tefeu"]
 [ext_resource type="PackedScene" uid="uid://c3c4v3nt0j1ym" path="res://objects/reticle/reticle.tscn" id="3_sugp2"]
 [ext_resource type="Shader" uid="uid://bo8m6lmwuvomd" path="res://graphics/shaders/pixelate/pixelate.gdshader" id="4_tbgi4"]
-[ext_resource type="PackedScene" uid="uid://bv8rx426eo6nh" path="res://objects/note_hit_text/note_hit_text.tscn" id="5_o6xl0"]
 [ext_resource type="Shader" uid="uid://dyql3bhuynagn" path="res://graphics/shaders/background.gdshader" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://qfoxy22d2fu1" path="res://scenes/bg_icon_sine.gd" id="7_o6xl0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tefeu"]
 shader = ExtResource("4_tbgi4")
@@ -30,19 +30,12 @@ beatmap_loader = NodePath("../../Rhythm Gameplay Elements/BeatmapLoader")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Rhythm Logic"]
 
-[node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(122, 324)
-texture = ExtResource("1_ig7tw")
-
 [node name="Rhythm Gameplay Elements" type="Node2D" parent="."]
 position = Vector2(278.903, 324)
 
-[node name="RichTextLabel" parent="Rhythm Gameplay Elements" instance=ExtResource("5_o6xl0")]
-offset_left = 31.096985
-offset_top = -175.0
-offset_right = 1454.0969
-offset_bottom = 75.0
-text = "[b][matrix oneshot=true]PERFECT"
+[node name="Icon" type="Sprite2D" parent="Rhythm Gameplay Elements"]
+position = Vector2(-156.90302, 0)
+texture = ExtResource("1_ig7tw")
 
 [node name="BeatmapLoader" type="BeatmapLoader" parent="Rhythm Gameplay Elements" node_paths=PackedStringArray("high_hit_location", "low_hit_location")]
 beatmap = ExtResource("1_tefeu")
@@ -70,7 +63,9 @@ position = Vector2(576, 324)
 scale = Vector2(1152, 648)
 texture = SubResource("CanvasTexture_sugp2")
 
-[node name="Icon" type="Sprite2D" parent="Background"]
-position = Vector2(706, 366)
+[node name="Icon" type="Sprite2D" parent="Background" node_paths=PackedStringArray("conductor")]
+position = Vector2(706, 345)
 scale = Vector2(2.6484375, 2.6484375)
 texture = ExtResource("1_ig7tw")
+script = ExtResource("7_o6xl0")
+conductor = NodePath("../../Rhythm Logic/Conductor")
